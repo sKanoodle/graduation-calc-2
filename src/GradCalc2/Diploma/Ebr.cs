@@ -47,7 +47,7 @@ namespace GradCalc2.Diploma
                 var grade = grades[i];
                 var lowerCourseGrade = grade.WithLowerCourse();
                 if (grade != lowerCourseGrade)
-                    Info.Add($"A-Kurs {grade.Subject.T()} zu B-Kurs umgewandelt ({grade.Value} -> {lowerCourseGrade.Value})");
+                    Info.Add($"B-Kurs {grade.Subject.T()} zu A-Kurs umgewandelt ({grade.Value} -> {lowerCourseGrade.Value})");
                 grades[i] = lowerCourseGrade;
             }
         }
