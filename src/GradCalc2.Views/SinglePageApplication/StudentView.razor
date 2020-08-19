@@ -1,0 +1,97 @@
+﻿<h3>@Student.LastName, @Student.FirstName</h3>
+@foreach (var subject in RenderSettings.Subjects)
+{
+    @if (Student.Grades.Select(g => g.Subject).Contains(subject.Subject))
+    {
+        <div>
+            <span>@subject.Subject.T()</span>
+            <input value="@Student[subject.Subject].Value" @onchange="@(e => OnGradeChange(e, subject))" type="number" min="1" max="6" />
+            @if (subject.CanBeAdvancedCourse)
+            {
+                @foreach (var course in new[]{AdvancedCourseDifferentiation.A, AdvancedCourseDifferentiation.B})
+                {
+                    <input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-{course}")" value="@((int)course)"
+                        @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == course)" />
+                    <label for="@($"{subject.Subject.T()}-{course}")">@course-Kurs</label>
+                }
+                @*<input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-A")" value="1" @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == AdvancedCourseDifferentiation.A)" />
+                <label for="@($"{subject.Subject.T()}-A")">A-Kurs</label>
+                <input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-B")" value="2" @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == AdvancedCourseDifferentiation.B)" />
+                <label for="@($"{subject.Subject.T()}-B")">B-Kurs</label>*@
+            }
+        </div>
+    }
+}
+@foreach (var diploma in Diplomas)
+{
+    <h4>@diploma.Name <span style="@($"color: {(diploma.IsAttained ? "green" : "red")};")">@($"({(diploma.IsAttained ? String.Empty : "nicht ")}erreicht)")</span></h4>
+    @foreach (var info in diploma.Info)
+    {
+        <div style="color: green;">
+            @info
+        </div>
+    }
+    @foreach (var error in diploma.ReasonsForFailing)
+    {
+        <div style="color: red;">
+            @error
+        </div>
+    }
+    @foreach (var advice in diploma.Advice)
+    {
+        <div style="color: darkorange;">
+            @advice
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Student Student { get; set; }
+
+    [Parameter]
+    public SubjectRenderSettings RenderSettings { get; set; }
+
+    private Diploma.Diploma[] Diplomas;
+
+    private void OnGradeChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting)
+    {
+        var grade = Student[setting.Subject];
+        var index = Array.IndexOf(Student.Grades, grade);
+        if (index >= 0)
+            Student.Grades[index] = grade.WithValue(int.Parse(e.Value.ToString()));
+        UpdateDiplomas();
+    }
+
+    private void OnCourseChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting)
+    {
+        OnChange(e, setting, grade => grade.WithCourse((AdvancedCourseDifferentiation)int.Parse(e.Value.ToString())));
+    }
+
+    private void OnChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting, Func<Grade, Grade> getNewGrade)
+    {
+        var grade = Student[setting.Subject];
+        var index = Array.IndexOf(Student.Grades, grade);
+        if (index >= 0)
+            Student.Grades[index] = getNewGrade(grade);
+        UpdateDiplomas();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        UpdateDiplomas();
+    }
+
+    private void UpdateDiplomas()
+    {
+        Diplomas = new Diploma.Diploma[]
+        {
+            new Diploma.Bbr(Student),
+            new Diploma.Ebr(Student),
+            new Diploma.For(Student),
+            new Diploma.Forq(Student),
+        };
+    }
+}

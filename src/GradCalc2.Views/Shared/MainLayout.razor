@@ -1,0 +1,56 @@
+﻿@inherits LayoutComponentBase
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    </div>
+
+    <div class="content px-4">
+        <StudentView RenderSettings="Settings" Student="Student" />
+    </div>
+</div>
+
+@code {
+    private SubjectRenderSettings Settings;
+    private Student Student;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Settings = new SubjectRenderSettings();
+        Settings.Subjects.AddRange(new[]{
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Mathematics, true),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.German, true),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.English, true),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.WP1, true),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Biology, false),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Art, false),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Music, false),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Sports, false),
+            new SubjectRenderSettings.SubjectRenderSetting(Subject.Politics, false),
+        });
+
+        Student = new Student(
+            "Max",
+            "Mustermann",
+            new[]
+            {
+                new Grade(Subject.Mathematics, AdvancedCourseDifferentiation.B, 2),
+                new Grade(Subject.German, AdvancedCourseDifferentiation.A, 4),
+                new Grade(Subject.English, AdvancedCourseDifferentiation.A, 5),
+                new Grade(Subject.WP1, AdvancedCourseDifferentiation.B, 2),
+                new Grade(Subject.Biology, AdvancedCourseDifferentiation.None, 2),
+                new Grade(Subject.Mathematics, AdvancedCourseDifferentiation.None, 3),
+                new Grade(Subject.Art, AdvancedCourseDifferentiation.None, 2),
+                new Grade(Subject.Music, AdvancedCourseDifferentiation.None, 6),
+                new Grade(Subject.Sports, AdvancedCourseDifferentiation.None, 2),
+                new Grade(Subject.Politics, AdvancedCourseDifferentiation.None, 5)
+            }
+        );
+    }
+}

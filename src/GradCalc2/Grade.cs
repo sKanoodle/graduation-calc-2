@@ -27,5 +27,15 @@ namespace GradCalc2
                 return new Grade(Subject, AdvancedCourseDifferentiation.A, Math.Max(1, Value - 1));
             return this;
         }
+
+        public Grade WithValue( int value )
+        {
+            return new Grade(Subject, Course, value);
+        }
+
+        public Grade WithCourse(AdvancedCourseDifferentiation course)
+        {
+            return new Grade(Subject, course, Value);
+        }
     }
 }

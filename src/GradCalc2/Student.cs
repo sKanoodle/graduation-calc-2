@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GradCalc2
@@ -16,5 +17,7 @@ namespace GradCalc2
             LastName = lastName;
             Grades = grades;
         }
+
+        public Grade this[Subject subject] => Grades.FirstOrDefault(g => g.Subject == subject);
     }
 }

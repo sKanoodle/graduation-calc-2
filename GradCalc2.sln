@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GradCalc2", "src\GradCalc2\GradCalc2.csproj", "{5AAAB29E-DD22-4298-9CCD-A89DA4C52F0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GradCalc2.Tests", "tests\GradCalc2.Tests\GradCalc2.Tests.csproj", "{9A6BBB88-ABC3-4E8A-ACE3-A6B6BC333637}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GradCalc2.Tests", "tests\GradCalc2.Tests\GradCalc2.Tests.csproj", "{9A6BBB88-ABC3-4E8A-ACE3-A6B6BC333637}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GradCalc2.Views", "src\GradCalc2.Views\GradCalc2.Views.csproj", "{CA2682AD-272C-4ED8-B888-DF729F1F262E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9A6BBB88-ABC3-4E8A-ACE3-A6B6BC333637}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A6BBB88-ABC3-4E8A-ACE3-A6B6BC333637}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A6BBB88-ABC3-4E8A-ACE3-A6B6BC333637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA2682AD-272C-4ED8-B888-DF729F1F262E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA2682AD-272C-4ED8-B888-DF729F1F262E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA2682AD-272C-4ED8-B888-DF729F1F262E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA2682AD-272C-4ED8-B888-DF729F1F262E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
