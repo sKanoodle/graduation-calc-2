@@ -1,23 +1,23 @@
-﻿<h3>@Student.LastName, @Student.FirstName</h3>
+﻿<h3>@DisplayStudent.LastName, @DisplayStudent.FirstName</h3>
+@if (DisplayStudent != OriginalStudent)
+{
+    <button @onclick="ResetStudent">Zurücksetzen</button>
+}
 @foreach (var subject in RenderSettings.Subjects)
 {
-    @if (Student.Grades.Select(g => g.Subject).Contains(subject.Subject))
+    @if (DisplayStudent.Grades.Select(g => g.Subject).Contains(subject.Subject))
     {
         <div>
             <span>@subject.Subject.T()</span>
-            <input value="@Student[subject.Subject].Value" @onchange="@(e => OnGradeChange(e, subject))" type="number" min="1" max="6" />
+            <input value="@DisplayStudent[subject.Subject].Value" @onchange="@(e => OnGradeChange(e, subject))" type="number" min="1" max="6" />
             @if (subject.CanBeAdvancedCourse)
             {
                 @foreach (var course in new[]{AdvancedCourseDifferentiation.A, AdvancedCourseDifferentiation.B})
                 {
                     <input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-{course}")" value="@((int)course)"
-                        @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == course)" />
+                        @onchange="@(e => OnCourseChange(e, subject))" checked="@(DisplayStudent[subject.Subject].Course == course)" />
                     <label for="@($"{subject.Subject.T()}-{course}")">@course-Kurs</label>
                 }
-                @*<input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-A")" value="1" @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == AdvancedCourseDifferentiation.A)" />
-                <label for="@($"{subject.Subject.T()}-A")">A-Kurs</label>
-                <input type="radio" name="@subject.Subject.T()" id="@($"{subject.Subject.T()}-B")" value="2" @onchange="@(e => OnCourseChange(e, subject))" checked="@(Student[subject.Subject].Course == AdvancedCourseDifferentiation.B)" />
-                <label for="@($"{subject.Subject.T()}-B")">B-Kurs</label>*@
             }
         </div>
     }
@@ -47,20 +47,17 @@
 
 @code {
     [Parameter]
-    public Student Student { get; set; }
+    public Student OriginalStudent { get; set; }
 
     [Parameter]
     public SubjectRenderSettings RenderSettings { get; set; }
 
     private Diploma.Diploma[] Diplomas;
+    private Student DisplayStudent;
 
     private void OnGradeChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting)
     {
-        var grade = Student[setting.Subject];
-        var index = Array.IndexOf(Student.Grades, grade);
-        if (index >= 0)
-            Student.Grades[index] = grade.WithValue(int.Parse(e.Value.ToString()));
-        UpdateDiplomas();
+        OnChange(e, setting, grade => grade.WithValue(int.Parse(e.Value.ToString())));
     }
 
     private void OnCourseChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting)
@@ -70,10 +67,8 @@
 
     private void OnChange(ChangeEventArgs e, SubjectRenderSettings.SubjectRenderSetting setting, Func<Grade, Grade> getNewGrade)
     {
-        var grade = Student[setting.Subject];
-        var index = Array.IndexOf(Student.Grades, grade);
-        if (index >= 0)
-            Student.Grades[index] = getNewGrade(grade);
+        var grade = DisplayStudent[setting.Subject];
+        DisplayStudent = DisplayStudent.WithGrade(getNewGrade(grade));
         UpdateDiplomas();
     }
 
@@ -81,17 +76,24 @@
     {
         base.OnInitialized();
 
+        ResetStudent(null);
+    }
+
+    private void ResetStudent(MouseEventArgs e)
+    {
+        DisplayStudent = OriginalStudent;
         UpdateDiplomas();
+        this.ShouldRender();
     }
 
     private void UpdateDiplomas()
     {
         Diplomas = new Diploma.Diploma[]
         {
-            new Diploma.Bbr(Student),
-            new Diploma.Ebr(Student),
-            new Diploma.For(Student),
-            new Diploma.Forq(Student),
+            new Diploma.Bbr(DisplayStudent),
+            new Diploma.Ebr(DisplayStudent),
+            new Diploma.For(DisplayStudent),
+            new Diploma.Forq(DisplayStudent),
         };
     }
 }
